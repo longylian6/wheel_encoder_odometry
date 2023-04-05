@@ -36,7 +36,7 @@ $$
 \Delta s = \frac{\Delta s_r + \Delta s_l }{2} \tag{4}
 $$
 
-以下介绍两种方法，根据编码器得到的左右轮子走过的路程 $\Delta s_l$ 和 $\Delta s_r$ ，计算机器人在参考坐标系下的位姿 $[x, y, \theta]^T$ .
+以下介绍3种方法，根据编码器得到的左右轮子走过的路程 $\Delta s_l$ 和 $\Delta s_r$ ，计算机器人在参考坐标系下的位姿 $[x, y, \theta]^T$ .
 
 ### 方法1
 
@@ -59,19 +59,20 @@ $$
 <img src="images/encoder_odom2.png" width="500px">
 </div>
 
-根据假设，机器人在 $k$ 时刻的路程变化量为 $\Delta s_k \simeq \Delta t \cdot v_k$ ， $x$ 位置的变化量 $\Delta x_k \simeq \Delta s_k \cdot \cos \theta_k$， $y$ 位置的变化量 $\Delta y_k \simeq \Delta s_k \cdot \sin \theta_k$，则
+机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t \cdot \omega_k$ ，根据假设，机器人在 $k$ 时刻的路程变化量为 $\Delta s_k \simeq \Delta t \cdot v_k$ ， $x$ 位置的变化量 $\Delta x_k \simeq \Delta s_k \cdot \cos \theta_k$， $y$ 位置的变化量 $\Delta y_k \simeq \Delta s_k \cdot \sin \theta_k$，这就是将两轮差速轮机器人的连续状态方程，即公式 $(1)$ ，转换为离散状态方程的一般形式，即
 
 $$ 
 \begin{cases}
 \begin{aligned}
-    x_{k+1} &= x_k + \Delta s_k  \cdot \cos \theta_k \\
-    y_{k+1} &= y_k + \Delta s_k  \cdot \sin \theta_k \\
-    \theta_{k+1} &= \theta_k + \Delta \theta_k 
+    x_{k+1} &= x_k + \Delta t \cdot v_k  \cdot \cos \theta_k \\
+    y_{k+1} &= y_k + \Delta t \cdot v_k  \cdot \sin \theta_k \\
+    \theta_{k+1} &= \theta_k + \Delta t \cdot \omega_k
 \end{aligned} 
 \end{cases}
+\tag{6}
 $$
 
-机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t \cdot \omega_k$ ，结合公式 $(3)$ 和公式 $(4)$ ，可以得到：
+结合公式 $(3)$ 和公式 $(4)$ ，可以得到：
 
 $$ 
 \begin{cases}
@@ -81,12 +82,46 @@ $$
     \theta_{k+1} &= \theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} 
 \end{aligned} 
 \end{cases}
-\tag{6}
+\tag{7}
 $$
 
-使用公式 $(6)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Rohan P. Singh在github的开源代码](https://github.com/rohanpsingh/encoder-odometry/blob/master/encoder_odometry/src/odometry.cpp)就是根据这样的方法计算轮式里程计.
+使用公式 $(7)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Rohan P. Singh在github的开源代码](https://github.com/rohanpsingh/encoder-odometry/blob/master/encoder_odometry/src/odometry.cpp)就是根据这样的方法计算轮式里程计.
 
 ### 方法2
+
+方法1假设 $\Delta t$ 足够小，将机器人运动近似为匀速直线运动. 但是在实际应用中， $\Delta t$ 一般不会足够小，可以将机器人在 $k$ 时刻的路程变化量，近似为机器人在 $k$ 时刻的位置和机器人在 $k+1$ 时刻的位置的位移差，即 $\Delta s_k \simeq \Delta d_k \simeq \Delta t \cdot v_k$
+
+<div align=center>
+<img src="images/encoder_odom3.png" width="500px">
+</div>
+
+如图所示，在方法1的基础上，对机器人在 $k$ 时刻的位置变化量的计算进行改进
+
+$$
+\begin{aligned}
+\Delta x_k &= \Delta d_k \cdot \cos 
+    \begin{pmatrix} 
+        \theta_k + \frac{\Delta \theta_k}{2} 
+    \end{pmatrix} 
+    \simeq \Delta s_k \cdot \cos  \\
+\Delta y_k &= \Delta d_k \cdot \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \simeq \Delta s_k \cdot \sin (\theta_k + \frac{\Delta \theta_k}{2})
+\end{aligned}
+$$
+
+机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t \cdot \omega_k$ ，结合公式 $(3)$ 和公式 $(4)$ ，可以得到：
+
+$$ 
+\begin{cases}
+\begin{aligned}
+    x_{k+1} &= x_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \cos (\theta_k) \\
+    y_{k+1} &= y_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin (\theta_k) \\
+    \theta_{k+1} &= \theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} 
+\end{aligned} 
+\end{cases}
+\tag{a}
+$$
+
+### 方法3
 
 假设 $\Delta t$ 较大，并且机器人在 $\Delta t$ 时间内的线速度和角速度保持不变，机器人在 $\Delta t$ 时间内的运动过程可以用圆弧运动来近似. 
 
@@ -97,7 +132,7 @@ $$
 根据假设，结合公式 $(3)$ 和公式 $(4)$ ，机器人在 $k$ 时刻的转弯半径 $R_k$ 为
 
 $$
-R_k = \frac{\Delta s_k}{\Delta \theta_k} = \frac{L}{2} \cdot \frac{\Delta s_{r,k} + \Delta s_{l,k}}{\Delta s_{r,k} - \Delta s_{l,k}} \tag{7}
+R_k = \frac{\Delta s_k}{\Delta \theta_k} = \frac{L}{2} \cdot \frac{\Delta s_{r,k} + \Delta s_{l,k}}{\Delta s_{r,k} - \Delta s_{l,k}} \tag{8}
 $$
 
 如上图所示，机器人在 $k$ 时刻的 $x$ 位置的变化量 $\Delta x_k$ 和 $y$ 位置的变化量 $\Delta y_k$ 可以分别表示为
@@ -109,10 +144,10 @@ $$
     \Delta y_k &= -R_k \cdot \cos (\theta_k + \Delta \theta_k) + R_k \cdot \cos \theta_k
 \end{aligned}
 \end{cases}
-\tag{8}
+\tag{9}
 $$
 
-结合公式 $(3)$ 和公式 $(8)$ ，可以得到：
+结合公式 $(3)$ 和公式 $(9)$ ，可以得到：
 
 $$ 
 \begin{cases}
@@ -122,10 +157,10 @@ $$
     \theta_{k+1} &= \theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} 
 \end{aligned} 
 \end{cases}
-\tag{9}
+\tag{10}
 $$
 
-使用公式 $(7)$ 和公式 $(9)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Autonomy Lab at SFU在github上开源的iRobot扫地机驱动](https://github.com/AutonomyLab/libcreate/blob/master/src/create.cpp)就是根据这样的方法计算轮式里程计.
+使用公式 $(8)$ 和公式 $(10)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Autonomy Lab at SFU在github上开源的iRobot扫地机驱动](https://github.com/AutonomyLab/libcreate/blob/master/src/create.cpp)就是根据这样的方法计算轮式里程计.
 
 参考文档：
 - Siegwart, Roland, and Illah R. Nourbakhsh. "Introduction to Autonomous Mobile Robots." Intelligent robotics and autonomous agents (2004).
