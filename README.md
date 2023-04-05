@@ -99,27 +99,26 @@ $$
 
 $$
 \begin{aligned}
-\Delta x_k &= \Delta d_k \cdot \cos 
-    \begin{pmatrix} 
-        \theta_k + \frac{\Delta \theta_k}{2} 
-    \end{pmatrix} 
-    \simeq \Delta s_k \cdot \cos  \\
-\Delta y_k &= \Delta d_k \cdot \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \simeq \Delta s_k \cdot \sin (\theta_k + \frac{\Delta \theta_k}{2})
+\Delta x_k &= \Delta d_k \cdot \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \simeq \Delta s_k \cdot \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right)  \\
+\Delta y_k &= \Delta d_k \cdot \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \simeq \Delta s_k \cdot \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right)
 \end{aligned}
+\tag{8}
 $$
 
-机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t \cdot \omega_k$ ，结合公式 $(3)$ 和公式 $(4)$ ，可以得到：
+机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t \cdot \omega_k$ ，结合公式 $(3)$ 、公式 $(4)$ 和公式 $(8)$ ，可以得到：
 
 $$ 
 \begin{cases}
 \begin{aligned}
-    x_{k+1} &= x_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \cos (\theta_k) \\
-    y_{k+1} &= y_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin (\theta_k) \\
+    x_{k+1} &= x_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \cos \left(\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{2L}\right) \\
+    y_{k+1} &= y_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin \left(\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{2L}\right) \\
     \theta_{k+1} &= \theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} 
 \end{aligned} 
 \end{cases}
-\tag{a}
+\tag{9}
 $$
+
+使用公式 $(9)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Emmanuel使用DrRobot X80实现SLAM的demo](https://github.com/A01371852/ROS_Autonomous_SLAM/blob/master/catkin_ws/src/drrobot_X80_player/src/drrobot_odometry.cpp)就是根据这样的方法计算轮式里程计.
 
 ### 方法3
 
@@ -132,7 +131,7 @@ $$
 根据假设，结合公式 $(3)$ 和公式 $(4)$ ，机器人在 $k$ 时刻的转弯半径 $R_k$ 为
 
 $$
-R_k = \frac{\Delta s_k}{\Delta \theta_k} = \frac{L}{2} \cdot \frac{\Delta s_{r,k} + \Delta s_{l,k}}{\Delta s_{r,k} - \Delta s_{l,k}} \tag{8}
+R_k = \frac{\Delta s_k}{\Delta \theta_k} = \frac{L}{2} \cdot \frac{\Delta s_{r,k} + \Delta s_{l,k}}{\Delta s_{r,k} - \Delta s_{l,k}} \tag{10}
 $$
 
 如上图所示，机器人在 $k$ 时刻的 $x$ 位置的变化量 $\Delta x_k$ 和 $y$ 位置的变化量 $\Delta y_k$ 可以分别表示为
@@ -144,10 +143,10 @@ $$
     \Delta y_k &= -R_k \cdot \cos (\theta_k + \Delta \theta_k) + R_k \cdot \cos \theta_k
 \end{aligned}
 \end{cases}
-\tag{9}
+\tag{11}
 $$
 
-结合公式 $(3)$ 和公式 $(9)$ ，可以得到：
+结合公式 $(3)$ 和公式 $(11)$ ，可以得到：
 
 $$ 
 \begin{cases}
@@ -157,11 +156,12 @@ $$
     \theta_{k+1} &= \theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} 
 \end{aligned} 
 \end{cases}
-\tag{10}
+\tag{12}
 $$
 
-使用公式 $(8)$ 和公式 $(10)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Autonomy Lab at SFU在github上开源的iRobot扫地机驱动](https://github.com/AutonomyLab/libcreate/blob/master/src/create.cpp)就是根据这样的方法计算轮式里程计.
+使用公式 $(10)$ 和公式 $(12)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Autonomy Lab at SFU在github上开源的iRobot扫地机驱动](https://github.com/AutonomyLab/libcreate/blob/master/src/create.cpp)就是根据这样的方法计算轮式里程计.
 
 参考文档：
-- Siegwart, Roland, and Illah R. Nourbakhsh. "Introduction to Autonomous Mobile Robots." Intelligent robotics and autonomous agents (2004).
 - [ARW – Lecture 01 Odometry Kinematics](https://www.hmc.edu/lair/ARW/ARW-Lecture01-Odometry.pdf)
+- Siegwart, Roland, and Illah R. Nourbakhsh. "Introduction to Autonomous Mobile Robots." Intelligent robotics and autonomous agents (2004).
+
