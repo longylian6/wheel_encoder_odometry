@@ -38,7 +38,7 @@ $$
 
 以下介绍3种方法，根据编码器得到的左右轮子走过的路程 $\Delta s_l$ 和 $\Delta s_r$ ，计算机器人在参考坐标系下的位姿 $[x, y, \theta]^T$ .
 
-### 方法1
+#### 方法1
 
 离散状态方程的一般形式为 $\mathbf{x}_{k+1} = \mathbf{x}_k + \Delta \mathbf{x}_k$ ，即
 
@@ -87,7 +87,7 @@ $$
 
 使用公式 $(7)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Rohan P. Singh在github的开源代码](https://github.com/rohanpsingh/encoder-odometry/blob/master/encoder_odometry/src/odometry.cpp)就是根据这样的方法计算轮式里程计.
 
-### 方法2
+#### 方法2
 
 方法1假设 $\Delta t$ 足够小，将机器人运动近似为匀速直线运动. 但是在实际应用中， $\Delta t$ 一般不会足够小，可以将机器人在 $k$ 时刻的路程变化量，近似为机器人在 $k$ 时刻的位置和机器人在 $k+1$ 时刻的位置的位移差，即 $\Delta s_k \simeq \Delta d_k \simeq \Delta t \cdot v_k$
 
@@ -120,7 +120,7 @@ $$
 
 使用公式 $(9)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Emmanuel使用DrRobot X80实现SLAM的demo](https://github.com/A01371852/ROS_Autonomous_SLAM/blob/master/catkin_ws/src/drrobot_X80_player/src/drrobot_odometry.cpp)就是根据这样的方法计算轮式里程计.
 
-### 方法3
+#### 方法3
 
 假设 $\Delta t$ 较大，并且机器人在 $\Delta t$ 时间内的线速度和角速度保持不变，机器人在 $\Delta t$ 时间内的运动过程可以用圆弧运动来近似. 
 
@@ -161,7 +161,7 @@ $$
 
 使用公式 $(10)$ 和公式 $(12)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Autonomy Lab at SFU在github上开源的iRobot扫地机驱动](https://github.com/AutonomyLab/libcreate/blob/master/src/create.cpp)就是根据这样的方法计算轮式里程计.
 
-参考文档：
+###### 参考文档：
 - [ARW – Lecture 01 Odometry Kinematics](https://www.hmc.edu/lair/ARW/ARW-Lecture01-Odometry.pdf)
 - Siegwart, Roland, and Illah R. Nourbakhsh. "Introduction to Autonomous Mobile Robots." Intelligent robotics and autonomous agents (2004).
 
