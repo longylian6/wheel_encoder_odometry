@@ -1,5 +1,5 @@
 # Kinematics
-两轮差速轮机器人在全局参考坐标系下的位姿为 $\mathbf{x} = [x, y, \theta]^T$ ，其中 $x$ 和 $y$ 表示机器人的位置， $\theta$ 表示机器人的航向角，其运动学方程 $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x})$ 如下所示：
+两轮差速轮机器人在全局参考坐标系下的位姿为 $\mathbf{x} = [x, y, \theta]^T$ ，其中 $x$ 和 $y$ 表示机器人的位置， $\theta$ 表示机器人的航向角，其运动学方程如下所示：
 
 $$
 \begin{cases}
@@ -59,14 +59,14 @@ $$
 <img src="images/encoder_odom2.png" width="500px">
 </div>
 
-机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t \cdot \omega_k$ ，根据假设，机器人在 $k$ 时刻的路程变化量为 $\Delta s_k \simeq \Delta t \cdot v_k$ ， $x$ 位置的变化量 $\Delta x_k \simeq \Delta s_k \cdot \cos \theta_k$， $y$ 位置的变化量 $\Delta y_k \simeq \Delta s_k \cdot \sin \theta_k$，这就是将两轮差速轮机器人的连续状态方程，即公式 $(1)$ ，转换为离散状态方程的一般形式，即
+机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t_k \cdot \omega_k$ ，根据假设，机器人在 $k$ 时刻的路程变化量为 $\Delta s_k \simeq \Delta t_k \cdot v_k$ ， $x$ 位置的变化量 $\Delta x_k \simeq \Delta s_k \cdot \cos \theta_k$， $y$ 位置的变化量 $\Delta y_k \simeq \Delta s_k \cdot \sin \theta_k$，这就是将两轮差速轮机器人的连续状态方程，即公式 $(1)$ ，转换为离散状态方程的一般形式，即
 
 $$ 
 \begin{cases}
 \begin{aligned}
-    x_{k+1} &= x_k + \Delta t \cdot v_k  \cdot \cos \theta_k \\
-    y_{k+1} &= y_k + \Delta t \cdot v_k  \cdot \sin \theta_k \\
-    \theta_{k+1} &= \theta_k + \Delta t \cdot \omega_k
+    x_{k+1} &= x_k + \Delta t_k \cdot v_k  \cdot \cos \theta_k \\
+    y_{k+1} &= y_k + \Delta t_k \cdot v_k  \cdot \sin \theta_k \\
+    \theta_{k+1} &= \theta_k + \Delta t_k \cdot \omega_k
 \end{aligned} 
 \end{cases}
 \tag{6}
@@ -89,7 +89,7 @@ $$
 
 #### 方法2
 
-方法1假设 $\Delta t$ 足够小，将机器人运动近似为匀速直线运动. 但是在实际应用中， $\Delta t$ 一般不会足够小，可以将机器人在 $k$ 时刻的路程变化量，近似为机器人在 $k$ 时刻的位置和机器人在 $k+1$ 时刻的位置的位移差，即 $\Delta s_k \simeq \Delta d_k \simeq \Delta t \cdot v_k$
+方法1假设 $\Delta t$ 足够小，将机器人运动近似为匀速直线运动. 但是在实际应用中， $\Delta t$ 一般不会足够小，可以将机器人在 $k$ 时刻的路程变化量，近似为机器人在 $k$ 时刻的位置和机器人在 $k+1$ 时刻的位置的位移差，即 $\Delta s_k \simeq \Delta d_k \simeq \Delta t_k \cdot v_k$
 
 <div align=center>
 <img src="images/encoder_odom3.png" width="500px">
@@ -105,7 +105,7 @@ $$
 \tag{8}
 $$
 
-机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t \cdot \omega_k$ ，结合公式 $(3)$ 、公式 $(4)$ 和公式 $(8)$ ，可以得到：
+机器人在 $k$ 时刻的航向角变化量 $\Delta \theta_k = \Delta t_k \cdot \omega_k$ ，结合公式 $(3)$ 、公式 $(4)$ 和公式 $(8)$ ，可以得到：
 
 $$ 
 \begin{cases}
@@ -151,8 +151,8 @@ $$
 $$ 
 \begin{cases}
 \begin{aligned}
-    x_{k+1} &= x_k + R_k \cdot \sin (\theta_k + \Delta \theta_k) - R_k \cdot \sin \theta_k \\
-    y_{k+1} &= y_k - R_k \cdot \cos (\theta_k + \Delta \theta_k) + R_k \cdot \cos \theta_k \\
+    x_{k+1} &= x_k + R_k \cdot \sin (\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L}) - R_k \cdot \sin \theta_k \\
+    y_{k+1} &= y_k - R_k \cdot \cos (\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L}) + R_k \cdot \cos \theta_k \\
     \theta_{k+1} &= \theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} 
 \end{aligned} 
 \end{cases}
@@ -160,6 +160,26 @@ $$
 $$
 
 使用公式 $(10)$ 和公式 $(12)$ 可以实现根据编码器数据更新机器人在参考坐标系下的位姿. [Autonomy Lab at SFU在github上开源的iRobot扫地机驱动](https://github.com/AutonomyLab/libcreate/blob/master/src/create.cpp)就是根据这样的方法计算轮式里程计.
+
+# Dynamic
+
+轮式编码器可以测量出在 $\Delta t$ 时间内机器人的左右轮子走过的路程 $\Delta s_l$ 和 $\Delta s_r$ ，那么机器人在 $k$ 时刻的左右轮子的速度(speed) $v_{l,k}$ 和 $v_{r,k}$ 可以表示为
+
+$$
+v_{l,k} = \frac{\Delta s_{l,k}}{\Delta t_k} \ \ \ \ \  v_{r,k} = \frac{\Delta s_{r,k}}{\Delta t_k} \tag{13}
+$$
+
+根据公式 $(3)$ 和公式 $(4)$ ，机器人在 $k$ 时刻的线速度 $v_k$ 和角速度 $\omega_k$ 可以表示为
+
+$$
+\begin{cases}
+\begin{aligned}
+    v_{k} &= \frac{\Delta s_k}{\Delta t_k} = \frac{\Delta s_{r,k} + \Delta s_{l,k}}{2 \cdot \Delta t_k} \\
+    \omega_{k} &= \frac{\Delta \theta_k}{\Delta t_k} = \frac{\Delta s_{r,k} - \Delta s_{l,k}}{L \cdot \Delta t_k}
+\end{aligned} 
+\end{cases}
+\tag{14}
+$$
 
 ###### 参考文档：
 - [ARW – Lecture 01 Odometry Kinematics](https://www.hmc.edu/lair/ARW/ARW-Lecture01-Odometry.pdf)
