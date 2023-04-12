@@ -189,7 +189,7 @@ $$
 \Sigma_\mathbf{y} = \mathbf{J}_{\mathbf{x}} \Sigma_\mathbf{x} \mathbf{J}_{\mathbf{x}}^T \tag{15}
 $$
 
-其中， $\Sigma_\mathbf{x}$ 为变量 $\mathbf{x}$ 的协方差矩阵，$\mathbf{J}_{\mathbf{x}}$ 为雅可比矩阵，其定义为
+其中， $\Sigma_\mathbf{x}$ 为变量 $\mathbf{x}$ 的协方差矩阵， $\mathbf{J}_{\mathbf{x}}$ 为雅可比矩阵，其定义为
 
 $$
 \mathbf{J}_{\mathbf{x}} = \nabla \mathbf{f} = 
@@ -201,7 +201,7 @@ $$
 \tag{16}
 $$
 
-以上述推导的运动学公式中的方法2为例，公式 $(9)$ 可以表示为 $\mathbf{x}_{k+1} = \mathbf{f}(x_k, y_k, \theta_k, \Delta s_{r,k}, \Delta s_{l,k})$
+以上述推导的运动学公式中的方法2为例，公式 $(9)$ 可以表示为
 
 $$
 \mathbf{x}_{k+1} = \mathbf{f}(x_k, y_k, \theta_k, \Delta s_{r,k}, \Delta s_{l,k}) = 
@@ -218,7 +218,9 @@ y_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin \left(\theta_k + \frac{\De
 \tag{17}
 $$
 
-由于 $\mathbf{x}_k$ 的不确定性误差和轮子转动 $\Delta_k = [\Delta s_{r,k}, \Delta s_{l,k}]^T$ 的误差， $\mathbf{x}_{k+1}$ 的位置误差会随着时间增大. 令轮子转动的协方差矩阵为 $\Sigma_{\Delta_k}$ ，则 $\Sigma_{\Delta_k}$ 可以表示为
+由于 $\mathbf{x} {k}$ 的不确定性误差，和轮子转动 $\Delta_k = [\Delta s_{r,k}, \Delta s_{l,k}]^T$ 的误差， $\mathbf{x}_{k+1}$ 的位置误差会随着时间增大. 
+
+令轮子转动的协方差矩阵为 $\Sigma_{\Delta_k}$ ，则 $\Sigma_{\Delta_k}$ 可以表示为
 
 $$
 \Sigma_{\Delta_k} =
