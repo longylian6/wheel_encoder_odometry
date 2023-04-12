@@ -181,6 +181,102 @@ $$
 \tag{14}
 $$
 
+# Error Model
+
+已知输入变量 $\mathbf{x} = [x_1, \cdots, x_n]^T$ 的概率分布和函数 $\mathbf{y} = \mathbf{f}(\mathbf{x})$ ，根据误差传播定律，将函数 $\mathbf{f}(\mathbf{x})$ 进行一阶泰勒展开，则输出变量 $\mathbf{y} = [y_1, \cdots, y_m]^T$ 的协方差矩阵可以表示为
+
+$$
+\Sigma_\mathbf{y} = \mathbf{J}_{\mathbf{x}} \Sigma_\mathbf{x} \mathbf{J}_{\mathbf{x}}^T \tag{15}
+$$
+
+其中， $\Sigma_\mathbf{x}$ 为变量 $\mathbf{x}$ 的协方差矩阵，$\mathbf{J}_{\mathbf{x}}$ 为雅可比矩阵，其定义为
+
+$$
+\mathbf{J}_{\mathbf{x}} = \nabla \mathbf{f} = 
+\begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} & \cdots & \frac{\partial y_1}{\partial x_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial y_m}{\partial x_1} & \cdots & \frac{\partial y_m}{\partial x_n}
+\end{bmatrix}
+\tag{16}
+$$
+
+以上述推导的运动学公式中的方法2为例，公式 $(9)$ 可以表示为 $\mathbf{x}_{k+1} = \mathbf{f}(x_k, y_k, \theta_k, \Delta s_{r,k}, \Delta s_{l,k})$
+
+$$
+\mathbf{x}_{k+1} = \mathbf{f}(x_k, y_k, \theta_k, \Delta s_{r,k}, \Delta s_{l,k}) = 
+\begin{bmatrix}
+x_{k+1} \\
+y_{k+1} \\
+\theta_{k+1}
+\end{bmatrix} = 
+\begin{bmatrix}
+x_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \cos \left(\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{2L}\right) \\
+y_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin \left(\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{2L}\right) \\
+\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L}
+\end{bmatrix}
+\tag{17}
+$$
+
+由于 $\mathbf{x}_k$ 的不确定性误差和轮子转动 $\Delta_k = [\Delta s_{r,k}, \Delta s_{l,k}]^T$ 的误差， $\mathbf{x}_{k+1}$ 的位置误差会随着时间增大. 令轮子转动的协方差矩阵为 $\Sigma_{\Delta_k}$ ，则 $\Sigma_{\Delta_k}$ 可以表示为
+
+$$
+\Sigma_{\Delta_k} =
+\begin{bmatrix}
+k_r|\Delta s_{r,k}| & 0 \\
+0 & k_l|\Delta s_{l,k}|
+\end{bmatrix}
+\tag{18}
+$$
+
+其中， $k_r$ 和 $k_l$ 为轮子转动的误差系数， $|\Delta s_{r,k}|$ 和 $|\Delta s_{l,k}|$ 为轮子转动的绝对路程，正如公式 $(18)$ 所示，这样设置 $\Sigma_{\Delta_k}$ 是基于以下假设：
+ - 左右两个轮子的转动误差是独立的
+ - 轮子的协方差误差与轮子转动的绝对路程成正比
+
+令 $\mathbf{x}_k$ 的协方差矩阵为 $\Sigma_{\mathbf{x}_k}$ ，假设 $\mathbf{x}_k$ 和 $\Delta_k$ 互不相关，根据误差传播定律， $\mathbf{x}_{k+1}$ 的协方差矩阵可以表示为
+
+$$
+\Sigma_{\mathbf{x}_{k+1}} = \nabla \mathbf{f}_{\mathbf{x}_k} \Sigma_{\mathbf{x}_k} \nabla \mathbf{f}_{\mathbf{x}_k}^T + 
+\nabla \mathbf{f}_{\Delta_k} \Sigma_{\Delta_k} \nabla \mathbf{f}_{\Delta_k}^T \tag{19}
+$$
+
+根据公式 $(17)$ 和 $(19)$ ， 雅克比矩阵 $\nabla \mathbf{f}_{\mathbf{x}_k}$ 可以表示为
+
+$$
+\nabla \mathbf{f}_{\mathbf{x}_k} = 
+\begin{bmatrix}
+\frac{\partial \mathbf{f}}{\partial x_k} & \frac{\partial \mathbf{f}}{\partial y_k} & \frac{\partial \mathbf{f}}{\partial \theta_k}
+\end{bmatrix} = 
+\begin{bmatrix}
+1 & 0 & -\Delta s_k \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
+0 & 1 & \Delta s_k \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
+0 & 0 & 1
+\end{bmatrix}
+\tag{20}
+$$
+
+其中， 
+
+$$
+\Delta s_k = \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2};  \Delta \theta_k = \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} \tag{21}
+$$
+
+雅克比矩阵 $\nabla \mathbf{f}_{\Delta_k}$ 可以表示为
+
+$$
+\nabla \mathbf{f}_{\Delta_k} = 
+\begin{bmatrix}
+\frac{\partial \mathbf{f}}{\partial \Delta s_{r,k}} & \frac{\partial \mathbf{f}}{\partial \Delta s_{l,k}}
+\end{bmatrix} = 
+\begin{bmatrix}
+\frac{1}{2} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) - \frac{\Delta s}{2L} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) & \frac{1}{2} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) + \frac{\Delta s}{2L} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
+\frac{1}{2} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) + \frac{\Delta s}{2L} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) & \frac{1}{2} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) - \frac{\Delta s}{2L} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
+\end{bmatrix}
+\tag{22}
+$$
+
+根据公式 $(19)$ 至公式 $(22)$ 可以计算 $\mathbf{x}_{k+1}$ 的协方差矩阵 $\Sigma_{\mathbf{x}_{k+1}}$ ，并将其作为 $\mathbf{x}_{k+1}$ 的不确定性误差。
+
 ###### 参考文档：
 - [ARW – Lecture 01 Odometry Kinematics](https://www.hmc.edu/lair/ARW/ARW-Lecture01-Odometry.pdf)
 - Siegwart, Roland, and Illah R. Nourbakhsh. "Introduction to Autonomous Mobile Robots." Intelligent robotics and autonomous agents (2004).
