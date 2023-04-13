@@ -218,9 +218,9 @@ y_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin \left(\theta_k + \frac{\De
 \tag{17}
 $$
 
-由于 $\mathbf{x_k}$ 的不确定性误差，和轮子转动 $\Delta_k = [\Delta s_{r,k}, \Delta s_{l,k}]^T$ 的误差， $\mathbf{x}_{k+1}$ 的位置误差会随着时间增大. 
+由于 $\mathbf{x}\_k$ 的不确定性误差和轮子运动 $\Delta_k = [\Delta s_{r,k}, \Delta s_{l,k}]^T$ 的误差， $\mathbf{x}\_{k+1}$ 的位置误差会随着时间增大. 
 
-令轮子转动的协方差矩阵为 $\Sigma_{\Delta_k}$ ，则 $\Sigma_{\Delta_k}$ 可以表示为
+令轮子运动的协方差矩阵为 $\Sigma_{\Delta_k}$ ，则 $\Sigma_{\Delta_k}$ 可以表示为
 
 $$
 \Sigma_{\Delta_k} =
@@ -235,7 +235,7 @@ $$
  - 左右两个轮子的转动误差是独立的
  - 轮子的协方差误差与轮子转动的绝对路程成正比
 
-令 $\mathbf{x_k}$ 的协方差矩阵为 $\Sigma_{\mathbf{x_k}}$ ，假设 $\mathbf{x_k}$ 和 $\Delta_k$ 互不相关，根据误差传播定律， $\mathbf{x}_{k+1}$ 的协方差矩阵可以表示为
+令 $\mathbf{x}\_k$ 的协方差矩阵为 $\Sigma_{\mathbf{x}\_k}$ ，假设 $\mathbf{x}\_k$ 和 $\Delta_k$ 互不相关，根据误差传播定律， $\mathbf{x}\_{k+1}$ 的协方差矩阵可以表示为
 
 $$
 \Sigma_{\mathbf{x}_{k+1}} = \nabla \mathbf{f}_{\mathbf{x}_k} \Sigma_{\mathbf{x}_k} \nabla \mathbf{f}_{\mathbf{x}_k}^T + 
@@ -278,7 +278,7 @@ $$
 \tag{22}
 $$
 
-根据公式 $(19)$ 至公式 $(22)$ 可以计算 $\mathbf{x_{k+1}}$ 的协方差矩阵 $\Sigma_{\mathbf{x_{k+1}}}$ ，并将其作为 $\mathbf{x_{k+1}}$ 的不确定性误差。
+根据公式 $(19)$ 至公式 $(22)$ 可以计算 $\mathbf{x}\_{k+1}$ 的协方差矩阵 $\Sigma_{\mathbf{x_{k+1}}}$ ，并将其作为 $\mathbf{x}\_{k+1}$ 的不确定性误差。
 
 ###### 参考文档：
 - [ARW – Lecture 01 Odometry Kinematics](https://www.hmc.edu/lair/ARW/ARW-Lecture01-Odometry.pdf)
