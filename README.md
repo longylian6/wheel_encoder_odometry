@@ -273,6 +273,7 @@ $$
 \begin{bmatrix}
 \frac{1}{2} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) - \frac{\Delta s}{2L} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) & \frac{1}{2} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) + \frac{\Delta s}{2L} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
 \frac{1}{2} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) + \frac{\Delta s}{2L} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) & \frac{1}{2} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) - \frac{\Delta s}{2L} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
+\frac{1}{L} & -\frac{1}{L}
 \end{bmatrix}
 \tag{22}
 $$
