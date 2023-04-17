@@ -278,7 +278,34 @@ $$
 \tag{22}
 $$
 
-根据公式 $(19)$ 至公式 $(22)$ 可以计算 $\mathbf{x}\_{k+1}$ 的协方差矩阵 $\Sigma_{\mathbf{x_{k+1}}}$ ，并将其作为 $\mathbf{x}\_{k+1}$ 的不确定性误差。
+根据公式 $(19)$ 至公式 $(22)$ 可以计算 $\mathbf{x}\_{k+1}$ 的协方差矩阵 $\Sigma_{\mathbf{x}\_{k+1}}$ ，并将其作为 $\mathbf{x}\_{k+1}$ 的不确定性误差. 
+
+同理，可以推导机器人在全局参考坐标系下的位姿增量的不确定性误差，根据公式 $(17)$ ，机器人在全局参考坐标系下的位姿增量为
+
+$$
+\Delta \mathbf{x}_{k} = \mathbf{g}(\Delta s_{r,k}, \Delta s_{l,k}) = 
+\begin{bmatrix}
+\Delta x_{k} \\
+\Delta y_{k} \\
+\Delta \theta_{k}
+\end{bmatrix} = 
+\begin{bmatrix}
+\frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \cos \left(\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{2L}\right) \\
+\frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin \left(\theta_k + \frac{\Delta s_{r,k} - \Delta s_{l,k} }{2L}\right) \\
+\frac{\Delta s_{r,k} - \Delta s_{l,k} }{L}
+\end{bmatrix}
+\tag{23}
+$$
+
+根据误差传播定律， $\Delta \mathbf{x}\_{k}$ 的协方差矩阵可以表示为
+
+$$
+\Sigma_{\Delta \mathbf{x}_{k}} = \nabla \mathbf{g}_{\Delta_k} \Sigma_{\Delta_k} \nabla \mathbf{g}_{\Delta_k}^T 
+ = \nabla \mathbf{f}_{\Delta_k} \Sigma_{\Delta_k} \nabla \mathbf{f}_{\Delta_k}^T \tag{24}
+$$
+
+公式 $(22)$ 和 $(24)$ 可以计算 $\Delta \mathbf{x}\_{k}$ 的协方差矩阵 $\Sigma_{\Delta \mathbf{x}\_{k}}$ ，并将其作为 $\Delta \mathbf{x}\_{k}$ 的不确定性误差.
+
 
 ###### 参考文档：
 - [ARW – Lecture 01 Odometry Kinematics](https://www.hmc.edu/lair/ARW/ARW-Lecture01-Odometry.pdf)
