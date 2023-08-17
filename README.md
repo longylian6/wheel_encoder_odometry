@@ -1,5 +1,5 @@
 # Kinematics
-两轮差速轮机器人在全局参考坐标系下的位姿为 $\mathbf{x} = [x, y, \theta]^T$ ，其中 $x$ 和 $y$ 表示机器人的位置， $\theta$ 表示机器人的航向角，其运动学方程如下所示：
+两轮差速轮机器人在全局参考坐标系下的位姿为 $\bf{x} = [x, y, \theta]^T$ ，其中 $x$ 和 $y$ 表示机器人的位置， $\theta$ 表示机器人的航向角，其运动学方程如下所示：
 
 $$
 \begin{cases}
@@ -40,7 +40,7 @@ $$
 
 #### 方法1
 
-离散状态方程的一般形式为 $\mathbf{x}_{k+1} = \mathbf{x}_k + \Delta \mathbf{x}_k$ ，即
+离散状态方程的一般形式为 $\bf{x}_{k+1} = \bf{x}_k + \Delta \bf{x}_k$ ，即
 
 $$
 \begin{cases}
@@ -183,16 +183,16 @@ $$
 
 # Error Model
 
-已知输入变量 $\mathbf{x} = [x_1, \cdots, x_n]^T$ 的概率分布和函数 $\mathbf{y} = \mathbf{f}(\mathbf{x})$ ，根据误差传播定律，将函数 $\mathbf{f}(\mathbf{x})$ 进行一阶泰勒展开，则输出变量 $\mathbf{y} = [y_1, \cdots, y_m]^T$ 的协方差矩阵可以表示为
+已知输入变量 $\bf{x} = [x_1, \cdots, x_n]^T$ 的概率分布和函数 $\bf{y} = \bf{f}(\bf{x})$ ，根据误差传播定律，将函数 $\bf{f}(\bf{x})$ 进行一阶泰勒展开，则输出变量 $\bf{y} = [y_1, \cdots, y_m]^T$ 的协方差矩阵可以表示为
 
 $$
-\Sigma_\mathbf{y} = \mathbf{J}_{\mathbf{x}} \Sigma_\mathbf{x} \mathbf{J}_{\mathbf{x}}^T \tag{15}
+\Sigma_\bf{y} = \bf{J}_{\bf{x}} \Sigma_\bf{x} \bf{J}_{\bf{x}}^T \tag{15}
 $$
 
-其中， $\Sigma_\mathbf{x}$ 为变量 $\mathbf{x}$ 的协方差矩阵， $\mathbf{J}_{\mathbf{x}}$ 为雅可比矩阵，其定义为
+其中， $\Sigma_\bf{x}$ 为变量 $\bf{x}$ 的协方差矩阵， $\bf{J}_{\bf{x}}$ 为雅可比矩阵，其定义为
 
 $$
-\mathbf{J}_{\mathbf{x}} = \nabla \mathbf{f} = 
+\bf{J}_{\bf{x}} = \nabla \bf{f} = 
 \begin{bmatrix}
 \frac{\partial y_1}{\partial x_1} & \cdots & \frac{\partial y_1}{\partial x_n} \\
 \vdots & \ddots & \vdots \\
@@ -204,7 +204,7 @@ $$
 以上述推导的运动学公式中的方法2为例，公式 $(9)$ 可以表示为
 
 $$
-\mathbf{x}_{k+1} = \mathbf{f}(x_k, y_k, \theta_k, \Delta s_{r,k}, \Delta s_{l,k}) = 
+\bf{x}_{k+1} = \bf{f}(x_k, y_k, \theta_k, \Delta s_{r,k}, \Delta s_{l,k}) = 
 \begin{bmatrix}
 x_{k+1} \\
 y_{k+1} \\
@@ -218,7 +218,7 @@ y_k + \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2} \sin \left(\theta_k + \frac{\De
 \tag{17}
 $$
 
-由于 $\mathbf{x}\_k$ 的不确定性误差和轮子运动 $\Delta_k = [\Delta s_{r,k}, \Delta s_{l,k}]^T$ 的误差， $\mathbf{x}\_{k+1}$ 的位置误差会随着时间增大. 
+由于 $\bf{x}\_k$ 的不确定性误差和轮子运动 $\Delta_k = [\Delta s_{r,k}, \Delta s_{l,k}]^T$ 的误差， $\bf{x}\_{k+1}$ 的位置误差会随着时间增大. 
 
 令轮子运动的协方差矩阵为 $\Sigma_{\Delta_k}$ ，则 $\Sigma_{\Delta_k}$ 可以表示为
 
@@ -235,19 +235,19 @@ $$
  - 左右两个轮子的转动误差是独立的
  - 轮子的协方差误差与轮子转动的绝对路程成正比
 
-令 $\mathbf{x}\_k$ 的协方差矩阵为 $\Sigma_{\mathbf{x}\_k}$ ，假设 $\mathbf{x}\_k$ 和 $\Delta_k$ 互不相关，根据误差传播定律， $\mathbf{x}\_{k+1}$ 的协方差矩阵可以表示为
+令 $\bf{x}\_k$ 的协方差矩阵为 $\Sigma_{\bf{x}\_k}$ ，假设 $\bf{x}\_k$ 和 $\Delta_k$ 互不相关，根据误差传播定律， $\bf{x}\_{k+1}$ 的协方差矩阵可以表示为
 
 $$
-\Sigma_{\mathbf{x}_{k+1}} = \nabla \mathbf{f}_{\mathbf{x}_k} \Sigma_{\mathbf{x}_k} \nabla \mathbf{f}_{\mathbf{x}_k}^T + 
-\nabla \mathbf{f}_{\Delta_k} \Sigma_{\Delta_k} \nabla \mathbf{f}_{\Delta_k}^T \tag{19}
+\Sigma_{\bf{x}_{k+1}} = \nabla \bf{f}_{\bf{x}_k} \Sigma_{\bf{x}_k} \nabla \bf{f}_{\bf{x}_k}^T + 
+\nabla \bf{f}_{\Delta_k} \Sigma_{\Delta_k} \nabla \bf{f}_{\Delta_k}^T \tag{19}
 $$
 
-根据公式 $(17)$ 和 $(19)$ ， 雅克比矩阵 $\nabla \mathbf{f}_{\mathbf{x}_k}$ 可以表示为
+根据公式 $(17)$ 和 $(19)$ ， 雅克比矩阵 $\nabla \bf{f}_{\bf{x}_k}$ 可以表示为
 
 $$
-\nabla \mathbf{f}_{\mathbf{x}_k} = 
+\nabla \bf{f}_{\bf{x}_k} = 
 \begin{bmatrix}
-\frac{\partial \mathbf{f}}{\partial x_k} & \frac{\partial \mathbf{f}}{\partial y_k} & \frac{\partial \mathbf{f}}{\partial \theta_k}
+\frac{\partial \bf{f}}{\partial x_k} & \frac{\partial \bf{f}}{\partial y_k} & \frac{\partial \bf{f}}{\partial \theta_k}
 \end{bmatrix} = 
 \begin{bmatrix}
 1 & 0 & -\Delta s_k \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
@@ -263,12 +263,12 @@ $$
 \Delta s_k = \frac{\Delta s_{r,k} + \Delta s_{l,k} }{2};  \Delta \theta_k = \frac{\Delta s_{r,k} - \Delta s_{l,k} }{L} \tag{21}
 $$
 
-雅克比矩阵 $\nabla \mathbf{f}_{\Delta_k}$ 可以表示为
+雅克比矩阵 $\nabla \bf{f}_{\Delta_k}$ 可以表示为
 
 $$
-\nabla \mathbf{f}_{\Delta_k} = 
+\nabla \bf{f}_{\Delta_k} = 
 \begin{bmatrix}
-\frac{\partial \mathbf{f}}{\partial \Delta s_{r,k}} & \frac{\partial \mathbf{f}}{\partial \Delta s_{l,k}}
+\frac{\partial \bf{f}}{\partial \Delta s_{r,k}} & \frac{\partial \bf{f}}{\partial \Delta s_{l,k}}
 \end{bmatrix} = 
 \begin{bmatrix}
 \frac{1}{2} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) - \frac{\Delta s}{2L} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) & \frac{1}{2} \cos \left(\theta_k + \frac{\Delta \theta_k}{2}\right) + \frac{\Delta s}{2L} \sin \left(\theta_k + \frac{\Delta \theta_k}{2}\right) \\
@@ -278,12 +278,12 @@ $$
 \tag{22}
 $$
 
-根据公式 $(19)$ 至公式 $(22)$ 可以计算 $\mathbf{x}\_{k+1}$ 的协方差矩阵 $\Sigma_{\mathbf{x}\_{k+1}}$ ，并将其作为 $\mathbf{x}\_{k+1}$ 的不确定性误差. 
+根据公式 $(19)$ 至公式 $(22)$ 可以计算 $\bf{x}\_{k+1}$ 的协方差矩阵 $\Sigma_{\bf{x}\_{k+1}}$ ，并将其作为 $\bf{x}\_{k+1}$ 的不确定性误差. 
 
 同理，可以推导机器人在全局参考坐标系下的位姿增量的不确定性误差，根据公式 $(17)$ ，机器人在全局参考坐标系下的位姿增量为
 
 $$
-\Delta \mathbf{x}_{k} = \mathbf{g}(\Delta s_{r,k}, \Delta s_{l,k}) = 
+\Delta \bf{x}_{k} = \bf{g}(\Delta s_{r,k}, \Delta s_{l,k}) = 
 \begin{bmatrix}
 \Delta x_{k} \\
 \Delta y_{k} \\
@@ -297,14 +297,14 @@ $$
 \tag{23}
 $$
 
-根据误差传播定律， $\Delta \mathbf{x}\_{k}$ 的协方差矩阵可以表示为
+根据误差传播定律， $\Delta \bf{x}\_{k}$ 的协方差矩阵可以表示为
 
 $$
-\Sigma_{\Delta \mathbf{x}_{k}} = \nabla \mathbf{g}_{\Delta_k} \Sigma_{\Delta_k} \nabla \mathbf{g}_{\Delta_k}^T 
- = \nabla \mathbf{f}_{\Delta_k} \Sigma_{\Delta_k} \nabla \mathbf{f}_{\Delta_k}^T \tag{24}
+\Sigma_{\Delta \bf{x}_{k}} = \nabla \bf{g}_{\Delta_k} \Sigma_{\Delta_k} \nabla \bf{g}_{\Delta_k}^T 
+ = \nabla \bf{f}_{\Delta_k} \Sigma_{\Delta_k} \nabla \bf{f}_{\Delta_k}^T \tag{24}
 $$
 
-公式 $(22)$ 和 $(24)$ 可以计算 $\Delta \mathbf{x}\_{k}$ 的协方差矩阵 $\Sigma_{\Delta \mathbf{x}\_{k}}$ ，并将其作为 $\Delta \mathbf{x}\_{k}$ 的不确定性误差.
+公式 $(22)$ 和 $(24)$ 可以计算 $\Delta \bf{x}\_{k}$ 的协方差矩阵 $\Sigma_{\Delta \bf{x}\_{k}}$ ，并将其作为 $\Delta \bf{x}\_{k}$ 的不确定性误差.
 
 
 ###### 参考文档：
